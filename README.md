@@ -1,89 +1,144 @@
 # Draw It or Lose It — Software Design & Platform Analysis
 
-> **Academic portfolio project** — This repository presents a final school project completed at Southern New Hampshire University using the fictional client scenario **The Gaming Room**. The original submitted project artifact is preserved unchanged in this repository.
+> **Academic software-engineering portfolio project** developed at Southern New Hampshire University from the fictional client scenario **The Gaming Room**. The repository focuses on requirements analysis, object-oriented design, platform evaluation, distributed architecture, security, and technical decision-making.
 
-## Quick Overview
+## Recruiter Quick View
+
+| Area | Evidence in this project |
+|---|---|
+| Object-oriented design | Java domain model using `Entity`, `Game`, `Team`, `Player`, and `GameService` |
+| Design patterns | Singleton service pattern, inheritance, encapsulation, collection lookup and duplicate prevention |
+| Systems analysis | Client requirements translated into technical constraints and architecture decisions |
+| Platform engineering | Linux, Windows, macOS, Android, and iOS evaluated for server/client roles |
+| Distributed systems | Responsive clients, Java backend services, RESTful HTTPS communication, relational data, object storage |
+| Security | Authentication, authorization, TLS, least privilege, encryption, logging, monitoring, and patching |
+| Reliability | Load balancing, redundancy, backups, health monitoring, and failover planning |
+| Technical communication | Full software design document and concise architecture documentation |
+
+## Portfolio Artifacts
+
+- **[Architecture Overview](docs/architecture-overview.md)** — recruiter-friendly domain model, deployment diagram, platform decision, storage/memory analysis, reliability, and security.
+- **[Complete Portfolio PDF](./Draw_It_or_Lose_It_Portfolio_Keishmar_Sobers_UNIVERSAL.pdf)** — preserved software design and platform analysis artifact.
+
+## Project Overview
 
 **Draw It or Lose It** is a software design and operating-platform analysis for a game application that needed to expand from an Android-only product into a secure, scalable, web-based system capable of supporting users across desktop and mobile platforms.
 
-This project focuses primarily on **systems analysis, software architecture, platform evaluation, security planning, scalability, and technical communication** rather than deployment of a production application.
+The project addresses two connected engineering problems:
 
-### Key Deliverables
+1. Design a maintainable object model for games, teams, players, identifiers, and duplicate-name controls.
+2. Recommend an operating and deployment architecture capable of supporting future cross-platform growth.
 
-- Requirements and platform analysis
-- UML/domain modeling
-- Java prototype concepts and object-oriented design
-- Operating-platform comparison
-- Linux and cloud deployment recommendation
-- Memory and storage analysis
-- Networking and distributed-system planning
-- Security, authentication, authorization, and least-privilege considerations
-- Scalability, redundancy, and failover recommendations
-- Complete technical design document
+This is primarily a **software-design and systems-analysis project**, not a claim that the complete cloud environment or production game was deployed.
 
 ## My Role
 
-I approached the project from the perspective of a **junior software designer and systems analyst**. I reviewed the client requirements, evaluated operating-platform options, analyzed architecture constraints, and developed a technical recommendation for the proposed application.
+I approached the scenario from the perspective of a junior software designer and systems analyst. I reviewed the client requirements, evaluated architectural constraints, analyzed operating-platform options, and developed a technical recommendation that connected business needs to implementation decisions.
 
-My work centered on connecting business and user needs to practical technical decisions and documenting those decisions clearly enough for both technical and nontechnical stakeholders.
+My work included:
 
-## Technical Concepts Demonstrated
+- Translating client requirements into software constraints.
+- Evaluating and documenting an object-oriented Java design.
+- Applying inheritance, encapsulation, and the singleton pattern.
+- Analyzing Linux, Windows, macOS, Android, and iOS platform considerations.
+- Recommending a Linux-based cloud backend with responsive web clients.
+- Evaluating memory, storage, networking, distributed systems, scalability, reliability, and security.
+- Communicating the recommendation in a client-centered technical design document.
 
-| Area | Concepts |
-| --- | --- |
-| Software Design | Object-oriented design, UML, domain modeling, requirements analysis |
-| Application Architecture | Client/server design, distributed systems, RESTful communication |
-| Platforms | Linux, Windows, macOS, Android, iOS, browser-based access |
-| Cloud & Scalability | Cloud hosting, load balancing, redundancy, failover planning |
-| Data & Storage | Relational database concepts, object storage, memory and storage planning |
-| Security | HTTPS, authentication, authorization, encryption, monitoring, least privilege |
-| Development | Java application concepts, technical documentation, architecture evaluation |
+## Object-Oriented Design
 
-## Proposed Technical Solution
+The application model centers on a `GameService` class that manages game creation, lookup, and identifier generation. `Game`, `Team`, and `Player` share common ID and name behavior through an `Entity` base class.
 
-The recommended architecture uses a **Linux-based cloud server** for backend services and a **responsive web application** for client access. This approach supports Windows, macOS, Android, iOS, and browser-based users while providing a scalable and cost-conscious foundation.
+Important design decisions include:
 
-The proposed solution includes:
+- A singleton `GameService` for one controlled service instance in the prototype.
+- Inheritance to reduce duplicated fields and behavior.
+- Encapsulation to protect object state.
+- Collection searches before object creation to prevent duplicate game and team names.
+- Modular responsibilities that can later be connected to persistence, APIs, and user interfaces.
 
-- Java-based server-side services
-- RESTful communication over HTTPS
-- Relational database storage for structured application data
-- Cloud object storage for images, logs, and backups
-- Authentication and role-based authorization
-- Encryption and secure transport
-- Monitoring and least-privilege access controls
-- Load balancing, redundancy, and failover planning for future growth
+The **[Architecture Overview](docs/architecture-overview.md)** contains a GitHub-rendered Mermaid class diagram of the domain model.
 
-## Important Scope Note
+## Recommended Technical Architecture
 
-The architecture above represents a **technical design recommendation developed for an academic systems-design project**. It should not be interpreted as a claim that the complete cloud architecture, database layer, authentication system, or production deployment was implemented and released.
+The recommended solution uses a **Linux-based cloud environment** for backend services and a **responsive web application** for client access. This separates the shared game logic from specific client devices and provides a path to support Windows, macOS, Android, iOS, and browser users without maintaining separate backends.
 
-The project demonstrates the ability to **analyze requirements, evaluate tradeoffs, model a system, and recommend an appropriate technical architecture** before implementation begins.
+The proposed architecture includes:
 
-## Project Artifact
+- Java-based application services.
+- RESTful communication over HTTPS.
+- Relational database storage for structured application data.
+- Cloud object storage for drawings, images, logs, and backups.
+- Authentication and role-based authorization.
+- Encryption in transit and at rest.
+- Monitoring, logging, and least-privilege controls.
+- Load balancing, redundancy, backups, and failover planning.
 
-[View the complete Software Design and Platform Analysis PDF](./Draw_It_or_Lose_It_Portfolio_Keishmar_Sobers_UNIVERSAL.pdf)
+## Platform Recommendation
 
-The preserved project document includes the domain model, UML diagram, Java prototype output, platform comparison, cloud recommendation, storage and memory analysis, distributed-system design, and security recommendations.
+Linux was selected as the strongest backend option because it provides a good combination of cloud compatibility, server stability, automation, cost control, Java support, and scalability.
+
+Windows remains a viable server alternative where Microsoft infrastructure is already central. macOS is better positioned for development and Apple-platform testing than general production hosting. Android and iOS should operate as clients connecting to the shared backend rather than host the server-side application.
+
+## Storage, Memory, Networking, and Security
+
+The project goes beyond selecting an operating system and examines how the application would behave in a distributed environment.
+
+### Storage and Memory
+
+- Relational storage for accounts, sessions, teams, scores, and game history.
+- Object storage for images, drawings, logs, and backups.
+- Linux virtual memory and process isolation for server stability.
+- JVM heap, stack, and garbage-collection considerations for the Java service.
+
+### Networking and Reliability
+
+- Distributed client-server communication through secure web APIs.
+- Load balancing to distribute traffic.
+- Redundant components and failover planning.
+- Monitoring, health checks, backup verification, and recovery procedures.
+
+### Security
+
+- HTTPS/TLS for all client-server communication.
+- Secure password hashing and salting.
+- Strong authentication and role-based authorization.
+- Input validation and protected API endpoints.
+- Least-privilege access controls.
+- Encryption for sensitive stored data and backups.
+- Audit logging, monitoring, regular patching, and vulnerability response.
+
+## Skills Demonstrated
+
+- Java
+- Object-Oriented Programming
+- UML and Domain Modeling
+- Software Design Patterns
+- Requirements Analysis
+- Systems Analysis
+- Operating Systems
+- Linux Fundamentals
+- Client-Server Architecture
+- RESTful Architecture
+- Distributed Systems
+- Relational Database Concepts
+- Cloud Architecture Fundamentals
+- Security Engineering Fundamentals
+- Reliability and Scalability Planning
+- Technical Documentation
 
 ## What I Learned
 
-This project strengthened my ability to move from a client problem to a structured technical recommendation. I learned to evaluate more than whether software can function: I also had to consider platform compatibility, security, scalability, memory, storage, networking, reliability, and long-term maintainability.
+This project strengthened my ability to move from a client problem to a structured technical recommendation. It reinforced that software engineering requires more than writing code: platform compatibility, data integrity, security, memory, storage, networking, reliability, scalability, and maintainability all shape the quality of the final system.
 
-It also reinforced that strong software engineering begins before coding. Requirements analysis, architecture decisions, documentation, and understanding user needs all influence whether a system will be effective once development begins.
+It also helped me practice explaining why a technical choice fits a business requirement rather than selecting technology simply because it is familiar.
 
-## Portfolio Value
+## Scope and Integrity Note
 
-This repository demonstrates skills relevant to entry-level roles involving:
+The full architecture represents a **technical design recommendation developed for an academic systems-design project**. The Java prototype concepts and object model were used to demonstrate software-design principles, while the cloud, database, authentication, and distributed deployment sections describe recommended future architecture rather than a released production system.
 
-- Software engineering
-- Systems analysis
-- Application support
-- Quality assurance
-- Technical documentation
-- Software architecture
-- Healthcare and other domain-focused technology environments
+The original portfolio artifact is preserved in the repository so the work can be reviewed in context.
 
 ## About Me
 
-I am a Computer Science student at Southern New Hampshire University with professional experience in healthcare operations and office leadership. I am continuing to build practical experience in software development, systems analysis, software architecture, quality assurance, and technical support while developing a broader software engineering portfolio.
+I am a Computer Science student at Southern New Hampshire University pursuing a Software Engineering concentration while building a portfolio across application development, systems analysis, software design, and healthcare technology.

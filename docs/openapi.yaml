@@ -1,0 +1,317 @@
+openapi: 3.1.0
+info:
+  title: Draw It or Lose It API
+  version: 0.1.0
+  description: >-
+    Portfolio prototype for managing the Game, Team, and Player hierarchy from
+    the Draw It or Lose It software design. Data is stored in memory and resets
+    whenever the application restarts.
+servers:
+  - url: http://localhost:8080
+    description: Local development
+tags:
+  - name: Games
+    description: Manage games and their nested teams and players.
+paths:
+  /api/v1/games:
+    get:
+      tags: [Games]
+      summary: List games
+      operationId: listGames
+      responses:
+        "200":
+          description: Games in creation order.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Game"
+    post:
+      tags: [Games]
+      summary: Create a game
+      operationId: createGame
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateNamedEntity"
+      responses:
+        "201":
+          description: Game created.
+          headers:
+            Location:
+              description: URL of the created game.
+              schema:
+                type: string
+                format: uri
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Game"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "409":
+          $ref: "#/components/responses/DuplicateName"
+  /api/v1/games/{gameId}:
+    parameters:
+      - $ref: "#/components/parameters/GameId"
+    get:
+      tags: [Games]
+      summary: Get a game
+      operationId: getGame
+      responses:
+        "200":
+          description: Game with its teams and players.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Game"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /api/v1/games/{gameId}/teams:
+    parameters:
+      - $ref: "#/components/parameters/GameId"
+    post:
+      tags: [Games]
+      summary: Add a team to a game
+      operationId: addTeam
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateNamedEntity"
+      responses:
+        "201":
+          description: Team created.
+          headers:
+            Location:
+              description: URL representing the created team.
+              schema:
+                type: string
+                format: uri
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Team"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/DuplicateName"
+  /api/v1/games/{gameId}/teams/{teamId}:
+    parameters:
+      - $ref: "#/components/parameters/GameId"
+      - $ref: "#/components/parameters/TeamId"
+    get:
+      tags: [Games]
+      summary: Get a team
+      operationId: getTeam
+      responses:
+        "200":
+          description: Team with its players.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Team"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /api/v1/games/{gameId}/teams/{teamId}/players:
+    parameters:
+      - $ref: "#/components/parameters/GameId"
+      - $ref: "#/components/parameters/TeamId"
+    post:
+      tags: [Games]
+      summary: Add a player to a team
+      operationId: addPlayer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateNamedEntity"
+      responses:
+        "201":
+          description: Player created.
+          headers:
+            Location:
+              description: URL representing the created player.
+              schema:
+                type: string
+                format: uri
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Player"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/DuplicateName"
+  /api/v1/games/{gameId}/teams/{teamId}/players/{playerId}:
+    parameters:
+      - $ref: "#/components/parameters/GameId"
+      - $ref: "#/components/parameters/TeamId"
+      - $ref: "#/components/parameters/PlayerId"
+    get:
+      tags: [Games]
+      summary: Get a player
+      operationId: getPlayer
+      responses:
+        "200":
+          description: Player details.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Player"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /actuator/health:
+    get:
+      summary: Check application health
+      operationId: getHealth
+      responses:
+        "200":
+          description: Application is available.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [status]
+                properties:
+                  status:
+                    type: string
+                    example: UP
+components:
+  parameters:
+    GameId:
+      name: gameId
+      in: path
+      required: true
+      description: Numeric game identifier.
+      schema:
+        type: integer
+        format: int64
+        minimum: 1
+    TeamId:
+      name: teamId
+      in: path
+      required: true
+      description: Numeric team identifier.
+      schema:
+        type: integer
+        format: int64
+        minimum: 1
+    PlayerId:
+      name: playerId
+      in: path
+      required: true
+      description: Numeric player identifier.
+      schema:
+        type: integer
+        format: int64
+        minimum: 1
+  schemas:
+    CreateNamedEntity:
+      type: object
+      additionalProperties: false
+      required: [name]
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 80
+          description: Name after surrounding whitespace is removed.
+          example: Quick Draw
+    Player:
+      type: object
+      additionalProperties: false
+      required: [id, name]
+      properties:
+        id:
+          type: integer
+          format: int64
+          minimum: 1
+        name:
+          type: string
+          maxLength: 80
+          example: Keishmar
+    Team:
+      type: object
+      additionalProperties: false
+      required: [id, name, players]
+      properties:
+        id:
+          type: integer
+          format: int64
+          minimum: 1
+        name:
+          type: string
+          maxLength: 80
+          example: Moonlight
+        players:
+          type: array
+          items:
+            $ref: "#/components/schemas/Player"
+    Game:
+      type: object
+      additionalProperties: false
+      required: [id, name, teams]
+      properties:
+        id:
+          type: integer
+          format: int64
+          minimum: 1
+        name:
+          type: string
+          maxLength: 80
+          example: Quick Draw
+        teams:
+          type: array
+          items:
+            $ref: "#/components/schemas/Team"
+    Problem:
+      type: object
+      required: [type, title, status, detail, instance]
+      properties:
+        type:
+          type: string
+          format: uri-reference
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+        instance:
+          type: string
+          format: uri-reference
+        errorCode:
+          type: string
+        errors:
+          type: object
+          additionalProperties:
+            type: string
+  responses:
+    ValidationError:
+      description: Request validation failed.
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+    NotFound:
+      description: The requested parent resource does not exist.
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+    DuplicateName:
+      description: A case-insensitive name conflict exists within the parent scope.
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/Problem"
